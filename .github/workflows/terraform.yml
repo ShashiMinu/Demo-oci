@@ -33,6 +33,11 @@ jobs:
         run: |
                   echo "${{ secrets.OCI_PRIVATE_KEY_BASE64 }}" | base64 -d > oci_api_key.pem
                     chmod 600 oci_api_key.pem
+      - name: Debug private key
+        run: |
+                   echo "----- FILE CONTENT START -----"
+                   head -5 oci_api_key.pem
+                      echo "----- FILE CONTENT END -----"
 
       - name: Terraform Init
         run: terraform init
