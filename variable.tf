@@ -14,7 +14,7 @@ variable "fingerprint" {
 variable "private_key" {
 type = string
 }
-variable"access_key"{
+variable "access_key"{
 type = string 
 }
 variable "secret_key"{
