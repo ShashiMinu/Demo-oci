@@ -42,7 +42,13 @@ jobs:
                       echo "----- FILE CONTENT END -----"
       - name : Read a variable 
         run: echo "my tenancy id is ${{secrets.TENANCY_OCID}}"
-
+        
+      - name : Read a variable 
+        run: echo "my tenancy id is ${{ secrets.USER_OCID }}"
+        
+      - name : Read a variable 
+        run: echo "my tenancy id is ${{ secrets.FINGERPRINT }}"
+        
       - name: Terraform Init
         run: terraform init
 
