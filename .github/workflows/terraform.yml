@@ -11,6 +11,8 @@ env:
   TF_VAR_fingerprint: ${{ secrets.FINGERPRINT }}
   TF_VAR_private_key: ${{ secrets.PRIVATE_KEY }}
   TF_VAR_region: ${{secrets.REGION}}
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   TF_VERSION: 1.6.6
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
@@ -80,14 +82,10 @@ jobs:
       - name: Terraform Init
         run: terraform init
       
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          
 
       - name: Terraform Apply
         run: terraform apply -auto-approve tfplan
      
-        env:
-          TF_VAR_tenancy_ocid: ${{ secrets.TENANCY_OCID }}
-          TF_VAR_region: ${{ secrets.REGION }}
+    
  
