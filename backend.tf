@@ -6,8 +6,8 @@ terraform {
 
     endpoint                    = "https://idqjvvuiw1f5.compat.objectstorage.us-ashburn-1.oraclecloud.com"
 
-    access_key                  = var.user_ocid
-    secret_key                  = var.private_key
+    access_key                  = var.access_key
+    secret_key                  = var.secret_key
 
     skip_credentials_validation = true
     skip_region_validation      = true
