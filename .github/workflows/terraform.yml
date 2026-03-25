@@ -5,58 +5,43 @@ on:
     branches: ["main"]
   workflow_dispatch:
 
-
 env:
-  TF_VAR_tenancy_ocid: ${{ secrets.TENANCY_OCID }}
-  TF_VAR_user_ocid: ${{ secrets.USER_OCID }}
-  TF_VAR_fingerprint: ${{ secrets.FINGERPRINT }}
-  TF_VAR_private_key: ${{ secrets.PRIVATE_KEY }}
-  TF_VAR_region: ${{ secrets.REGION }}
-
-  AWS_ACCESS_KEY_ID: ${{ secrets.OCI_ACCESS_KEY }}
-  AWS_SECRET_ACCESS_KEY: ${{ secrets.OCI_SECRET_KEY }}
-
   TF_VERSION: 1.6.6
 
 jobs:
-
   plan:
     runs-on: ubuntu-latest
     environment: prod
 
-    steps:
-      - uses: actions/checkout@v4
+    env:
+      TF_VAR_tenancy_ocid: ${{ secrets.TENANCY_OCID }}
+      TF_VAR_user_ocid: ${{ secrets.USER_OCID }}
+      TF_VAR_fingerprint: ${{ secrets.FINGERPRINT }}
+      TF_VAR_region: ${{ secrets.REGION }}
 
-      - uses: hashicorp/setup-terraform@v3
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: ${{ env.TF_VERSION }}
 
-      - name: Create OCI private key
+      - name: Decode OCI private key
         run: |
-                  echo "${{ secrets.PRIVATE_KEY }}" | base64 -d > oci_api_key.pem
-                    chmod 600 oci_api_key.pem
-                    
-      - name: Debug private key
+          echo "${{ secrets.PRIVATE_KEY }}" | base64 -d > oci_api_key.pem
+          chmod 600 oci_api_key.pem
+
+      - name: Validate private key
         run: |
-                   echo "----- FILE CONTENT START -----"
-                   head -5 oci_api_key.pem
-                      echo "----- FILE CONTENT END -----"
-                      
-       - name: validate complete key 
-         run: |
-                   echo "----- LAST LINES -----"
-                   tail -5 oci_api_key.pem
-                   echo "----- LINE COUNT -----"
-                    wc -l oci_api_key.pem
-      - name : Read a variable 
-        run: echo "my tenancy id is ${{secrets.TENANCY_OCID}}"
-        
-      - name : Read a variable 
-        run: echo "my tenancy id is ${{ secrets.USER_OCID }}"
-        
-      - name : Read a variable 
-        run: echo "my tenancy id is ${{ secrets.FINGERPRINT }}"
-        
+          echo "----- FIRST LINES -----"
+          head -5 oci_api_key.pem
+          echo "----- LAST LINES -----"
+          tail -5 oci_api_key.pem
+          echo "----- OPENSSL CHECK -----"
+          openssl rsa -in oci_api_key.pem -check -noout
+
       - name: Terraform Init
         run: terraform init
 
@@ -72,16 +57,20 @@ jobs:
           name: tfplan
           path: tfplan
 
-
   apply:
     needs: plan
     runs-on: ubuntu-latest
+    environment: prod   # ✅ MUST match where secrets are
 
-    environment:
-      name: apply-approval
+    env:
+      TF_VAR_tenancy_ocid: ${{ secrets.TENANCY_OCID }}
+      TF_VAR_user_ocid: ${{ secrets.USER_OCID }}
+      TF_VAR_fingerprint: ${{ secrets.FINGERPRINT }}
+      TF_VAR_region: ${{ secrets.REGION }}
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
       - name: Download Plan
         uses: actions/download-artifact@v4
@@ -89,9 +78,15 @@ jobs:
           name: tfplan
           path: .
 
-      - uses: hashicorp/setup-terraform@v3
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: ${{ env.TF_VERSION }}
+
+      - name: Decode OCI private key
+        run: |
+          echo "${{ secrets.PRIVATE_KEY }}" | base64 -d > oci_api_key.pem
+          chmod 600 oci_api_key.pem
 
       - name: Terraform Init
         run: terraform init
