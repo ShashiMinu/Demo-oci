@@ -29,6 +29,11 @@ jobs:
         with:
           terraform_version: ${{ env.TF_VERSION }}
 
+      - name: Create OCI private key
+        run: |
+                  echo "${{ secrets.OCI_PRIVATE_KEY_BASE64 }}" | base64 -d > oci_api_key.pem
+                    chmod 600 oci_api_key.pem
+
       - name: Terraform Init
         run: terraform init
 
