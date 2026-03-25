@@ -82,9 +82,8 @@ jobs:
 
       - name: Terraform Apply
         run: terraform apply -auto-approve tfplan
-      - name: Upload state to OCI
-        run: |
-               oci os object put \
-               --bucket-name cribl-test-bucket \
-                 --file terraform.tfstate \
-                 --name dev/terraform.tfstate
+      - name: Upload state 
+        uses: actions/upload-artifact@v4
+        with:
+          name: tfstate.tf
+          path: tfstate.tf
