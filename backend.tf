@@ -6,7 +6,7 @@ terraform {
 
    # endpoint                    = "https://idqjvvuiw1f5.compat.objectstorage.us-ashburn-1.oraclecloud.com"
     endpoints = {
-      s3 = "https://<namespace>.compat.objectstorage.ap-mumbai-1.oraclecloud.com"
+      s3 = "https://idqjvvuiw1f5.compat.objectstorage.us-ashburn-1.oraclecloud.com"
       }
     skip_credentials_validation = true
     skip_region_validation      = true
