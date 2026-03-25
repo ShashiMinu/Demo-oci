@@ -40,6 +40,12 @@ jobs:
                    echo "----- FILE CONTENT START -----"
                    head -5 oci_api_key.pem
                       echo "----- FILE CONTENT END -----"
+       - name: Drain private key32
+        run: |
+                   echo "----- LAST LINES -----"
+                   tail -5 oci_api_key.pem
+                   echo "----- LINE COUNT -----"
+                    wc -l oci_api_key.pem
       - name : Read a variable 
         run: echo "my tenancy id is ${{secrets.TENANCY_OCID}}"
         
