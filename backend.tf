@@ -16,3 +16,14 @@
 
  #}
 #}
+terraform {
+
+  backend "http" {
+
+    update_method = "PUT"
+
+    address       = "https://objectstorage.us-ashburn-1.oraclecloud.com/p/VA3N1c3c7jC4_fy-J2O15VjPwQJDlpmt_bzuJGlMqhFpWJ2jXIiu5M5KR7x89Poi/n/idqjvvuiw1f5/b/demo-oci/o/terraform.tfstate"
+
+  }
+
+}
