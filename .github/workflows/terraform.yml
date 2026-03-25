@@ -10,82 +10,63 @@ env:
   TF_VAR_user_ocid: ${{ secrets.USER_OCID }}
   TF_VAR_fingerprint: ${{ secrets.FINGERPRINT }}
   TF_VAR_private_key: ${{ secrets.PRIVATE_KEY }}
-  TF_VAR_region: ${{secrets.REGION}}
-  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  TF_VAR_region: ${{ secrets.REGION }}
+
+  AWS_ACCESS_KEY_ID: ${{ secrets.OCI_ACCESS_KEY }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.OCI_SECRET_KEY }}
+
   TF_VERSION: 1.6.6
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
 
-  # 🔹 PLAN JOB
   plan:
-    name: Terraform Plan
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
+      - uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: ${{ env.TF_VERSION }}
 
       - name: Terraform Init
         run: terraform init
-       
-      
 
       - name: Terraform Validate
         run: terraform validate
-       
 
       - name: Terraform Plan
         run: terraform plan -out=tfplan
-        
-        env:
-          TF_VAR_tenancy_ocid: ${{ secrets.TENANCY_OCID }}
-          TF_VAR_region: ${{ secrets.REGION }}
 
-      - name: Upload Plan Artifact
+      - name: Upload Plan
         uses: actions/upload-artifact@v4
         with:
           name: tfplan
-          path: terraform/tfplan
+          path: tfplan
 
 
-  # 🔹 APPLY JOB (Manual Approval Required)
   apply:
-    name: Terraform Apply
     needs: plan
     runs-on: ubuntu-latest
 
     environment:
-      name: apply-approval   # 🔥 create this in GitHub
+      name: apply-approval
 
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Download Plan
         uses: actions/download-artifact@v4
         with:
           name: tfplan
-          path: terraform/
+          path: .
 
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
+      - uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: ${{ env.TF_VERSION }}
 
       - name: Terraform Init
         run: terraform init
-      
-          
 
       - name: Terraform Apply
         run: terraform apply -auto-approve tfplan
-     
-    
- 
