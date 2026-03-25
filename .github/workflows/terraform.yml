@@ -35,13 +35,15 @@ jobs:
         run: |
                   echo "${{ secrets.PRIVATE_KEY }}" | base64 -d > oci_api_key.pem
                     chmod 600 oci_api_key.pem
+                    
       - name: Debug private key
         run: |
                    echo "----- FILE CONTENT START -----"
                    head -5 oci_api_key.pem
                       echo "----- FILE CONTENT END -----"
-       - name: Drain private key32
-        run: |
+                      
+       - name: validate complete key 
+         run: |
                    echo "----- LAST LINES -----"
                    tail -5 oci_api_key.pem
                    echo "----- LINE COUNT -----"
