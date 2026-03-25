@@ -4,7 +4,7 @@ variable "tenancy_ocid" {
 variable "region"{
   type =string
 }
-variable " private_key" {
+variable "private_key" {
   type = string
 }
 variable "user_ocid" {
