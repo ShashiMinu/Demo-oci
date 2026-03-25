@@ -19,6 +19,8 @@ jobs:
       TF_VAR_fingerprint: ${{ secrets.FINGERPRINT }}
       TF_VAR_region: ${{ secrets.REGION }}
       TF_VAR_private_key: ${{secrets.PRIVATE_KEY }}
+      TF_VAR_secret_key: ${{secrets.SECRET_KEY }}
+      TF_VAR_access_key: ${{secrets.ACCESS_KEY_ID }}
 
     steps:
       - name: Checkout
