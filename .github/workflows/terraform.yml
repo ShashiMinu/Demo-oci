@@ -33,7 +33,7 @@ jobs:
 
       - name: Create OCI private key
         run: |
-                  echo "${{ secrets.PRIVATEKEY }}" | base64 -d > oci_api_key.pem
+                  echo "${{ secrets.PRIVATE_KEY }}" | base64 -d > oci_api_key.pem
                     chmod 600 oci_api_key.pem
       - name: Debug private key
         run: |
