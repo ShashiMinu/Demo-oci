@@ -38,7 +38,7 @@ jobs:
                    echo "----- FILE CONTENT START -----"
                    head -5 oci_api_key.pem
                       echo "----- FILE CONTENT END -----"
-        -name : Read a variable 
+      - name : Read a variable 
         run: echo "my tenancy id is ${{secrets.TENANCY_OCID}}
 
       - name: Terraform Init
