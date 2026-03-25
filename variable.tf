@@ -11,6 +11,6 @@ variable "user_ocid" {
 variable "fingerprint" {
   type = string 
 }
-variable {"private_key" {
+variable "private_key" {
 type = string
 }
